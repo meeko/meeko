@@ -32,7 +32,7 @@ import (
 var ciderapp = gocli.NewApp("ciderapp")
 
 func init() {
-	ciderapp.UsageLine = "ciderapp [-ep ENDPOINT] SUBCMD [options] [arguments]"
+	ciderapp.UsageLine = "ciderapp [-debug] [-endpoint ENDPOINT] SUBCMD"
 	ciderapp.Version = "0.0.1"
 	ciderapp.Short = "Cider applications management utility"
 	ciderapp.Long = `
@@ -42,7 +42,7 @@ func init() {
   This tool expects the local Cider instance's management token to be saved
   in .cider_token file places in the current user's home directory.`
 	ciderapp.Flags.BoolVar(&fdebug, "debug", fdebug, "print debug output")
-	ciderapp.Flags.StringVar(&fendpoint, "endpoint", fendpoint, "Cider management endpoint")
+	ciderapp.Flags.StringVar(&fendpoint, "endpoint", fendpoint, "Cider ZeroMQ 3.x RPC endpoint")
 }
 
 var (

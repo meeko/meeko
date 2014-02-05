@@ -2,23 +2,24 @@
 
 `ciderapp` is a command line utility for managing local Cider applications.
 
-The idea is simple - it uses the same Cider client as any other Cider application,
-but it only executed a single management command, waits for the result and exits.
+Cider RPC is being used as the transport for the management calls, so `ciderapp`
+is actually a Cider application itself. It just connects to a Cider RPC endpoint,
+executes a single management call and exits.
 
 ```text
-$ ./ciderapp 
 APPLICATION:
   ciderapp - Cider applications management utility
 
 USAGE:
-  ciderapp SUBCMD [options] [arguments]
+  ciderapp [-debug] [-endpoint ENDPOINT] SUBCMD
 
 VERSION:
   0.0.1
 
 OPTIONS:
+  -debug=false: print debug output
+  -endpoint="": Cider ZeroMQ 3.x RPC endpoint
   -h=false: print help and exit
-  -verbose=false: print more verbose output
 
 DESCRIPTION:
   ciderapp is a command line utility for managing local Cider instance,
@@ -45,4 +46,4 @@ SUBCOMMANDS:
 
 # License
 
-MIT, see the LICENSE file.
+MIT, see the `LICENSE` file.
