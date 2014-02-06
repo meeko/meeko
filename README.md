@@ -41,6 +41,7 @@ SUBCOMMANDS:
   stop           stop a running app
   unset          unset app variable
   upgrade        upgrade an existing app
+  watch          stream app logs
   
 ```
 
