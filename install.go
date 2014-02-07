@@ -23,13 +23,17 @@ func init() {
   IMPORT_PATH is a valid URL defining the repository holding the application
   sources and Cider configuration. The following schemes are available:
 
-    * git+ssh  - clones a Git repository using SSH,
-                 URL fragment is treated as Git ref.
-	             example: git+ssh://git@github.com:cider/cider.git#develop
+    * git+ssh   - clones a Git repository over SSH,
+                  URL fragment is treated as Git ref.
+	              example: git+ssh://git@github.com:cider/cider.git#develop
 
-    * git+file - clones a Git repository from a local repository,
-                 URL fragment is treated as Git ref.
-                 example: git+file:///home/tchap/src/ciderapp#develop
+    * git+https - clones a Git repository over HTTPS,
+                  URL fragment is treated as Git ref.
+                  example: git+https://github.com/cider/cider-demo-webapp#master
+
+    * git+file  - clones a Git repository from a local repository,
+                  URL fragment is treated as Git ref.
+                  example: git+file:///home/tchap/src/ciderapp#develop
         `,
 		Action: runInstall,
 	})
@@ -59,9 +63,9 @@ func _runInstall(url string, alias string) error {
 	// Send the install request to the server.
 	var reply data.InstallReply
 	err = SendRequest("Cider.Apps.Install", &data.InstallArgs{
-		Token:         token,
-		Alias:         alias,
-		RepositoryURL: url,
+		Token:      token,
+		Alias:      alias,
+		Repository: url,
 	}, &reply)
 	if err != nil {
 		return err

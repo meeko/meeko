@@ -16,15 +16,23 @@ import (
 )
 
 func init() {
-	ciderapp.MustRegisterSubcommand(&gocli.Command{
-		UsageLine: "env ALIAS",
+	subcmd := &gocli.Command{
+		UsageLine: "env [-include_unset] ALIAS",
 		Short:     "show app variable values",
 		Long: `
   Show the environmental variables as defined for application ALIAS.
+
+  Unset variables are not shown unless -include_unset is present.
         `,
 		Action: runEnv,
-	})
+	}
+	subcmd.Flags.BoolVar(&fenvIncludeUnset, "include_unset", fenvIncludeUnset,
+		"include unset variables in the output")
+
+	ciderapp.MustRegisterSubcommand(subcmd)
 }
+
+var fenvIncludeUnset bool
 
 func runEnv(cmd *gocli.Command, args []string) {
 	if len(args) != 1 {
@@ -63,7 +71,14 @@ func _runEnv(alias string) error {
 	defer tw.Flush()
 
 	for k, v := range reply.Vars {
-		if v.Value != "" {
+		if v.Value != "" || fenvIncludeUnset {
+			if v.Value == "" {
+				if v.Optional {
+					v.Value = color.Sprint("@{y}<unset>@{|}")
+				} else {
+					v.Value = color.Sprint("@{r}<unset>@{|}")
+				}
+			}
 			fmt.Fprintf(tw, "%s\t%v\n", k, v.Value)
 		}
 	}

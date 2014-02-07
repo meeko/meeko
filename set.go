@@ -18,7 +18,7 @@ func init() {
 		UsageLine: `
   set VAR for ALIAS to VALUE
   set -ask VAR for ALIAS
-  set -from FROM_ALIAS [-ours|-theirs] [VAR] for ALIAS
+  (TBD) set -from FROM_ALIAS [-ours|-theirs] [VAR] for ALIAS
 		`,
 		Short: "set app variable",
 		Long: `

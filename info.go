@@ -71,7 +71,7 @@ func _runInfo(alias string) error {
 	fmt.Fprintf(tw, "App name:\t%s\n", app.Name)
 	fmt.Fprintf(tw, "Version:\t%s\n", app.Version)
 	fmt.Fprintf(tw, "Description:\t%s\n", app.Description)
-	fmt.Fprintf(tw, "Repository:\t%s\n", app.RepositoryURL)
+	fmt.Fprintf(tw, "Repository:\t%s\n", app.Repository)
 	if len(app.Vars) != 0 {
 		fmt.Fprintf(tw, "Variables:\n")
 		for k, v := range app.Vars {
