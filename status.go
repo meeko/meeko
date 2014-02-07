@@ -68,8 +68,8 @@ func _runStatus(args []string) error {
 	}
 
 	// Print the reply.
-	if len(reply.Apps) == 1 {
-		fmt.Println(colorStatus(reply.Apps[0].Status))
+	if len(args) == 1 {
+		fmt.Println(colorStatus(reply.Status))
 		return nil
 	}
 
@@ -80,8 +80,8 @@ func _runStatus(args []string) error {
 	fmt.Fprintln(tw, "ALIAS\tSTATUS")
 	fmt.Fprintln(tw, "=====\t======")
 
-	for _, app := range reply.Apps {
-		fmt.Fprintf(tw, "%s\t%s\n", app.Alias, colorStatus(app.Status))
+	for k, v := range reply.Statuses {
+		fmt.Fprintf(tw, "%s\t%s\n", k, colorStatus(v))
 	}
 
 	fmt.Fprintln(tw, "")
