@@ -51,7 +51,7 @@ func _runStop(alias string) error {
 	err = SendRequest("Cider.Apps.Stop", &data.StopArgs{
 		Token: token,
 		Alias: alias,
-	}, reply)
+	}, &reply)
 	if err != nil {
 		return err
 	}
