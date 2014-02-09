@@ -8,6 +8,7 @@ package main
 import (
 	"errors"
 	"github.com/cider/cider/apps/data"
+	"github.com/cider/cider/broker/services/logging"
 	"github.com/tchap/gocli"
 	"github.com/wsxiaoys/terminal/color"
 	"os"
@@ -23,13 +24,13 @@ func init() {
   are emitted by the app.
 
   Log levels available for the level flag are
+    0) unset (default)
 	1) trace
 	2) debug
 	3) info
 	4) warning
 	5) error
 	6) critical
-    7) unset (default)
 
   Choosing particular log level means that all the levels higher in the list
   are included as well, e.g warning level enables error and critical as well.
@@ -62,13 +63,18 @@ func _runWatch(alias string) error {
 		return err
 	}
 
+	level, err := logging.ParseLogLevel(watchLevel)
+	if err != nil {
+		return err
+	}
+
 	// Start streaming the logs. This command will remain active until
 	// interrupted by the user.
 	var reply data.WatchReply
 	err = SendRequest("Cider.Apps.Watch", &data.WatchArgs{
 		Token: token,
 		Alias: alias,
-		Level: watchLevel,
+		Level: uint32(level),
 	}, &reply)
 	if err != nil {
 		return err

@@ -9,6 +9,7 @@ import (
 	"github.com/cider/go-cider/cider/services/rpc"
 	zrpc "github.com/cider/go-cider/cider/transports/zmq3/rpc"
 	zmq "github.com/pebbe/zmq3"
+	"github.com/wsxiaoys/terminal/color"
 )
 
 func SendRequest(method string, args interface{}, reply interface{}) (err error) {
@@ -46,7 +47,7 @@ func SendRequest(method string, args interface{}, reply interface{}) (err error)
 	go func() {
 		select {
 		case <-signalCh:
-			debug("Interrupting remote call ...")
+			color.Println("@{c}<<< @{r}Interrupting remote call ...")
 			req.Interrupt()
 		case <-client.Closed():
 		}
