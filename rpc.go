@@ -60,7 +60,7 @@ func SendRequest(method string, args interface{}, reply interface{}) (err error)
 		return err
 	}
 
-	debug("Return code: ", req.ReturnCode, "\n")
+	debug("Return code: ", req.ReturnCode(), "\n")
 	err = req.UnmarshalReturnValue(&reply)
 	debug("Return value: ", reply, "\n")
 	return err
