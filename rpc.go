@@ -17,14 +17,15 @@ func SendRequest(method string, args interface{}, reply interface{}) (err error)
 
 	debug("Connecting to Cider ... ")
 	client, err := rpc.NewService(func() (rpc.Transport, error) {
-		config := zrpc.NewTransportConfig()
-		config.MustFeedFromEnv("CIDER_ZMQ3_RPC_")
+		factory := zrpc.NewTransportFactory()
+		factory.MustReadConfigFromEnv("CIDER_ZMQ3_RPC_")
 
 		if fendpoint != "" {
-			config.Endpoint = fendpoint
+			factory.Endpoint = fendpoint
 		}
 
-		return config.NewTransport("ciderapp#" + mustRandomString())
+		factory.MustBeFullyConfigured()
+		return factory.NewTransport("ciderapp#" + mustRandomString())
 	})
 	if err != nil {
 		debug(FAIL)
