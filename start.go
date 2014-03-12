@@ -14,8 +14,8 @@ import (
 )
 
 func init() {
-	ciderapp.MustRegisterSubcommand(&gocli.Command{
-		UsageLine: "start ALIAS",
+	cmd := &gocli.Command{
+		UsageLine: "start [-watch] ALIAS",
 		Short:     "start an app",
 		Long: `
   Start a Cider application.
@@ -25,8 +25,13 @@ func init() {
   exported as environmental variables.
         `,
 		Action: runStart,
-	})
+	}
+	cmd.Flags.BoolVar(&fstartWatch, "watch", false, "start watching the app")
+
+	ciderapp.MustRegisterSubcommand(cmd)
 }
+
+var fstartWatch bool
 
 func runStart(cmd *gocli.Command, args []string) {
 	if len(args) != 1 {
@@ -54,6 +59,7 @@ func _runStart(alias string) error {
 	err = SendRequest("Cider.Apps.Start", &data.StartArgs{
 		Token: token,
 		Alias: alias,
+		Watch: fstartWatch,
 	}, &reply)
 	if err != nil {
 		return err
