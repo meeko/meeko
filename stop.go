@@ -11,19 +11,25 @@ import (
 	"github.com/tchap/gocli"
 	"github.com/wsxiaoys/terminal/color"
 	"os"
+	"time"
 )
 
 func init() {
-	ciderapp.MustRegisterSubcommand(&gocli.Command{
-		UsageLine: "stop ALIAS",
+	subcmd := &gocli.Command{
+		UsageLine: "stop [-timeout] ALIAS",
 		Short:     "stop a running app",
 		Long: `
   Stop a Cider application, if it is actually running, that is.
   If that is not the case, this action is a NOOP.
         `,
 		Action: runStop,
-	})
+	}
+	subcmd.Flags.DurationVar(&fstopTimeout, "timeout", fstopTimeout, "kill the app after timeout")
+
+	ciderapp.MustRegisterSubcommand(subcmd)
 }
+
+var fstopTimeout time.Duration = -1
 
 func runStop(cmd *gocli.Command, args []string) {
 	if len(args) != 1 {
@@ -49,8 +55,9 @@ func _runStop(alias string) error {
 	// Send the clone request to the server.
 	var reply data.StopReply
 	err = SendRequest("Cider.Apps.Stop", &data.StopArgs{
-		Token: token,
-		Alias: alias,
+		Token:   token,
+		Alias:   alias,
+		Timeout: fstopTimeout,
 	}, &reply)
 	if err != nil {
 		return err

@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	cmd := &gocli.Command{
+	subcmd := &gocli.Command{
 		UsageLine: "start [-watch] ALIAS",
 		Short:     "start an app",
 		Long: `
@@ -26,9 +26,9 @@ func init() {
         `,
 		Action: runStart,
 	}
-	cmd.Flags.BoolVar(&fstartWatch, "watch", false, "start watching the app")
+	subcmd.Flags.BoolVar(&fstartWatch, "watch", fstartWatch, "start watching the app")
 
-	ciderapp.MustRegisterSubcommand(cmd)
+	ciderapp.MustRegisterSubcommand(subcmd)
 }
 
 var fstartWatch bool
