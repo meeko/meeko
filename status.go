@@ -23,9 +23,10 @@ func init() {
   When used without any argument, this command lists all installed applications
   together with their statuses. The status is one of the following:
 
-	* stopped   - the app is configured and can be started any time
-	* running   - the app is running
-	* crashed   - Cider tried to start the app process, but it crashed
+    * stopped - the app is configured and can be started any time
+    * running - the app is running
+    * crashed - Cider tried to start the app process, but it crashed
+    * killed  - Cider failed to stop the app and had to kill it
 
   When used with non-empty ALIAS, only the status of the chosen app is printed.
         `,
@@ -96,6 +97,8 @@ func colorStatus(status string) string {
 		return color.Sprint("@{g}running@{|}")
 	case "crashed":
 		return color.Sprint("@{r}crashed@{|}")
+	case "killed":
+		return color.Sprint("@{m}killed@{|}")
 	}
 
 	panic("Unknown status returned")
