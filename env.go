@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -8,19 +8,21 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/cider/cider/apps/data"
-	"github.com/tchap/gocli"
-	"github.com/wsxiaoys/terminal/color"
 	"os"
 	"text/tabwriter"
+
+	"github.com/meeko/meekod/supervisor/data"
+
+	"github.com/tchap/gocli"
+	"github.com/wsxiaoys/terminal/color"
 )
 
 func init() {
 	subcmd := &gocli.Command{
 		UsageLine: "env [-include_unset] ALIAS",
-		Short:     "show app variable values",
+		Short:     "show agent variable values",
 		Long: `
-  Show the environmental variables as defined for application ALIAS.
+  Show the environmental variables as defined for agent ALIAS.
 
   Unset variables are not shown unless -include_unset is present.
         `,
@@ -29,7 +31,7 @@ func init() {
 	subcmd.Flags.BoolVar(&fenvIncludeUnset, "include_unset", fenvIncludeUnset,
 		"include unset variables in the output")
 
-	mk.MustRegisterSubcommand(subcmd)
+	app.MustRegisterSubcommand(subcmd)
 }
 
 var fenvIncludeUnset bool
@@ -47,16 +49,16 @@ func runEnv(cmd *gocli.Command, args []string) {
 }
 
 func _runEnv(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	config, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
 
 	// Send the status request to the server.
 	var reply data.EnvReply
-	err = SendRequest("Cider.Apps.Env", &data.EnvArgs{
-		Token: token,
+	err = SendRequest(config.Address, config.AccessToken, MethodEnv, &data.EnvArgs{
+		Token: config.ManagementToken,
 		Alias: alias,
 	}, &reply)
 	if err != nil {

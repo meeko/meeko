@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -7,28 +7,30 @@ package main
 
 import (
 	"errors"
-	"github.com/cider/cider/apps/data"
+	"os"
+
+	"github.com/meeko/meekod/supervisor/data"
+
 	"github.com/tchap/gocli"
 	"github.com/wsxiaoys/terminal/color"
-	"os"
 )
 
 func init() {
 	subcmd := &gocli.Command{
 		UsageLine: "start [-watch] ALIAS",
-		Short:     "start an app",
+		Short:     "start an agent",
 		Long: `
-  Start a Cider application.
+  Start a Meeko agent.
 
-  To start an application, all the required application variables must be set.
-  If that is the case, a new process is started with all the application vars
-  exported as environmental variables.
+  To start an agent, all the required agent variables must be set. When all the
+  requirements are met, a new process is started with all the agent variables
+  exported as environment variables.
         `,
 		Action: runStart,
 	}
-	subcmd.Flags.BoolVar(&fstartWatch, "watch", fstartWatch, "start watching the app")
+	subcmd.Flags.BoolVar(&fstartWatch, "watch", fstartWatch, "start watching the agent")
 
-	mk.MustRegisterSubcommand(subcmd)
+	app.MustRegisterSubcommand(subcmd)
 }
 
 var fstartWatch bool
@@ -48,16 +50,16 @@ func runStart(cmd *gocli.Command, args []string) {
 }
 
 func _runStart(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
 
 	// Send the clone request to the server.
 	var reply data.StartReply
-	err = SendRequest("Cider.Apps.Start", &data.StartArgs{
-		Token: token,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodStart, &data.StartArgs{
+		Token: cfg.ManagementToken,
 		Alias: alias,
 		Watch: fstartWatch,
 	}, &reply)

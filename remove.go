@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -7,19 +7,21 @@ package main
 
 import (
 	"errors"
-	"github.com/cider/cider/apps/data"
-	"github.com/tchap/gocli"
-	"github.com/wsxiaoys/terminal/color"
 	"os"
 	"strings"
+
+	"github.com/meeko/meekod/supervisor/data"
+
+	"github.com/tchap/gocli"
+	"github.com/wsxiaoys/terminal/color"
 )
 
 func init() {
-	mk.MustRegisterSubcommand(&gocli.Command{
+	app.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "remove ALIAS",
-		Short:     "uninstall an app",
+		Short:     "uninstall an agent",
 		Long: `
-  Removal of an application means that all the files associated with it are
+  Removal of an agent means that all the files associated with it are
   deleted. The database records meet the same bitter end.
         `,
 		Action: runRemove,
@@ -41,8 +43,8 @@ func runRemove(cmd *gocli.Command, args []string) {
 }
 
 func _runRemove(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
@@ -58,8 +60,8 @@ func _runRemove(alias string) error {
 
 	// Send the clone request to the server.
 	var reply data.RemoveReply
-	err = SendRequest("Cider.Apps.Remove", &data.RemoveArgs{
-		Token: token,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodRemove, &data.RemoveArgs{
+		Token: cfg.ManagementToken,
 		Alias: alias,
 	}, &reply)
 	if err != nil {

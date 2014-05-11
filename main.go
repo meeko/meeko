@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -6,33 +6,35 @@
 package main
 
 import (
+	"os"
+
 	"github.com/cihub/seelog"
 	"github.com/tchap/gocli"
-	"os"
 )
 
-var mk = gocli.NewApp("mk")
+var app = gocli.NewApp("meeko")
 
 func init() {
-	mk.UsageLine = "mk [-debug] [-endpoint ENDPOINT] SUBCMD"
-	mk.Version = "0.0.1"
-	mk.Short = "Cider applications management utility"
-	mk.Long = `
-  mk is a command line utility for managing local Cider instance,
-  or rather the Cider applications running on it.
+	app.UsageLine = "meeko [-debug] [-config=PATH] SUBCMD"
+	app.Version = "0.0.1"
+	app.Short = "Meeko agents management utility"
+	app.Long = `
+  meeko is a command line utility for managing Meeko agents.
+  Check the list of subcommands to see what actions are available.
 
-  This tool expects the local Cider instance's management token to be saved
-  in .cider_token file places in the current user's home directory.`
-	mk.Flags.BoolVar(&fdebug, "debug", fdebug, "print debug output")
-	mk.Flags.StringVar(&fendpoint, "endpoint", fendpoint, "Cider ZeroMQ 3.x RPC endpoint")
+  meeko expects a configuration file called .meekorc to be present
+  in the user's home directory. The path can be ovewritten with -config.`
+
+	app.Flags.BoolVar(&flagDebug, "debug", flagDebug, "print debug output")
+	app.Flags.StringVar(&flagConfig, "config", flagConfig, "configuration file path")
 }
 
 var (
-	fdebug    bool
-	fendpoint string
+	flagDebug  bool
+	flagConfig string = MustDefaultConfigPath()
 )
 
 func main() {
 	seelog.ReplaceLogger(seelog.Disabled)
-	mk.Run(os.Args[1:])
+	app.Run(os.Args[1:])
 }

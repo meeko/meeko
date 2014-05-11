@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -8,22 +8,24 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/cider/cider/apps/data"
-	"github.com/tchap/gocli"
-	"github.com/wsxiaoys/terminal/color"
 	"os"
 	"text/tabwriter"
+
+	"github.com/meeko/meekod/supervisor/data"
+
+	"github.com/tchap/gocli"
+	"github.com/wsxiaoys/terminal/color"
 )
 
 func init() {
-	mk.MustRegisterSubcommand(&gocli.Command{
+	app.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "info ALIAS",
-		Short:     "show app info",
+		Short:     "show agent info",
 		Long: `
-  Show application info, which is basically the relevant mk.json,
-  just formated nicely. This command, however, does not only print the static
-  data from mk.json, but also the current application configuration,
-  such as the environmental variables.
+  Show agent info, which is basically the relevant agent.json, just formatted
+  nicely. This command, however, does not only print the static data from
+  agent.json, but also the current agent configuration, such as the environment
+  variables.
         `,
 		Action: runInfo,
 	})
@@ -42,16 +44,16 @@ func runInfo(cmd *gocli.Command, args []string) {
 }
 
 func _runInfo(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return nil
 	}
 
 	// Send the status request to the server.
 	var reply data.InfoReply
-	err = SendRequest("Cider.Apps.Info", &data.InfoArgs{
-		Token: token,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodInfo, &data.InfoArgs{
+		Token: cfg.ManagementToken,
 		Alias: alias,
 	}, &reply)
 	if err != nil {
@@ -61,20 +63,20 @@ func _runInfo(alias string) error {
 		return errors.New(reply.Error)
 	}
 
-	// Print the app info.
+	// Print the agent info.
 	tw := tabwriter.NewWriter(os.Stdout, 0, 8, 2, '\t', 0)
 	defer tw.Flush()
 
-	app := reply.App
+	agent := reply.Agent
 
-	fmt.Fprintf(tw, "Alias:\t%s\n", app.Alias)
-	fmt.Fprintf(tw, "App name:\t%s\n", app.Name)
-	fmt.Fprintf(tw, "Version:\t%s\n", app.Version)
-	fmt.Fprintf(tw, "Description:\t%s\n", app.Description)
-	fmt.Fprintf(tw, "Repository:\t%s\n", app.Repository)
-	if len(app.Vars) != 0 {
+	fmt.Fprintf(tw, "Alias:\t%s\n", agent.Alias)
+	fmt.Fprintf(tw, "Name:\t%s\n", agent.Name)
+	fmt.Fprintf(tw, "Version:\t%s\n", agent.Version)
+	fmt.Fprintf(tw, "Description:\t%s\n", agent.Description)
+	fmt.Fprintf(tw, "Repository:\t%s\n", agent.Repository)
+	if len(agent.Vars) != 0 {
 		fmt.Fprintf(tw, "Variables:\n")
-		for k, v := range app.Vars {
+		for k, v := range agent.Vars {
 			fmt.Fprintf(tw, "\t\tName:\t%s\n", k)
 			fmt.Fprintf(tw, "\t\tUsage:\t%s\n", v.Usage)
 			fmt.Fprintf(tw, "\t\tType:\t%s\n", v.Type)

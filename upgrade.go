@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -7,20 +7,22 @@ package main
 
 import (
 	"errors"
-	"github.com/cider/cider/apps/data"
+	"os"
+
+	"github.com/meeko/meekod/supervisor/data"
+
 	"github.com/tchap/gocli"
 	"github.com/wsxiaoys/terminal/color"
-	"os"
 )
 
 func init() {
-	mk.MustRegisterSubcommand(&gocli.Command{
+	app.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "upgrade ALIAS",
-		Short:     "upgrade an existing app",
+		Short:     "upgrade an installed agent",
 		Long: `
-  Upgrading an application means that its sources are updated and
-  the application is rebuilt, replacing the old executable if successful.
-  As the last step, the application process is restarted.
+  Upgrading an agent means that its sources are updated and the executable
+  is rebuilt, replacing the old executable if successful. Then the agent
+  process is restarted if running.
         `,
 		Action: runUpgrade,
 	})
@@ -41,16 +43,16 @@ func runUpgrade(cmd *gocli.Command, args []string) {
 }
 
 func _runUpgrade(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
 
 	// Send the clone request to the server.
 	var reply data.UpgradeReply
-	err = SendRequest("Cider.Apps.Upgrade", &data.RemoveArgs{
-		Token: token,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodUpgrade, &data.UpgradeArgs{
+		Token: cfg.ManagementToken,
 		Alias: alias,
 	}, &reply)
 	if err != nil {

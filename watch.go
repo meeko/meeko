@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -7,21 +7,23 @@ package main
 
 import (
 	"errors"
-	"github.com/cider/cider/apps/data"
-	"github.com/cider/cider/broker/services/logging"
+	"os"
+
+	"github.com/meeko/meekod/broker/services/logging"
+	"github.com/meeko/meekod/supervisor/data"
+
 	"github.com/tchap/gocli"
 	"github.com/wsxiaoys/terminal/color"
-	"os"
 )
 
 func init() {
 	subcmd := &gocli.Command{
 		UsageLine: "watch [-level=LEVEL] ALIAS",
-		Short:     "stream app logs",
+		Short:     "stream agent logs",
 		Long: `
-  Stream app logs of ALIAS to stdout. Just for completion, it is not possible
+  Stream agent logs of ALIAS to stdout. Just for completion, it is not possible
   to view older logs, this subcommand really only prints log entries as they
-  are emitted by the app.
+  are emitted by the agent.
 
   Log levels available for the level flag are
     0) unset (default)
@@ -39,7 +41,7 @@ func init() {
 	}
 	subcmd.Flags.StringVar(&watchLevel, "level", watchLevel, "filter logs by log level")
 
-	mk.MustRegisterSubcommand(subcmd)
+	app.MustRegisterSubcommand(subcmd)
 }
 
 var watchLevel = "unset"
@@ -57,8 +59,8 @@ func runWatch(cmd *gocli.Command, args []string) {
 }
 
 func _runWatch(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
@@ -71,8 +73,8 @@ func _runWatch(alias string) error {
 	// Start streaming the logs. This command will remain active until
 	// interrupted by the user.
 	var reply data.WatchReply
-	err = SendRequest("Cider.Apps.Watch", &data.WatchArgs{
-		Token: token,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodWatch, &data.WatchArgs{
+		Token: cfg.ManagementToken,
 		Alias: alias,
 		Level: uint32(level),
 	}, &reply)

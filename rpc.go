@@ -1,3 +1,8 @@
+// Copyright (c) 2013 The mk AUTHORS
+//
+// Use of this source code is governed by The MIT License
+// that can be found in the LICENSE file.
+
 package main
 
 import (
@@ -6,38 +11,56 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/cider/go-cider/cider/services/rpc"
-	zrpc "github.com/cider/go-cider/cider/transports/zmq3/rpc"
-	zmq "github.com/pebbe/zmq3"
+	"github.com/meeko/go-meeko/meeko/services/rpc"
+	transport "github.com/meeko/go-meeko/meeko/transports/websocket/rpc"
+
+	"code.google.com/p/go.net/websocket"
 	"github.com/wsxiaoys/terminal/color"
 )
 
-func SendRequest(method string, args interface{}, reply interface{}) (err error) {
-	defer zmq.Term()
+const (
+	MethodEnv     = "Meeko.Agent.Env"
+	MethodInfo    = "Meeko.Agent.Info"
+	MethodInstall = "Meeko.Agent.Install"
+	MethodList    = "Meeko.Agent.List"
+	MethodRemove  = "Meeko.Agent.Remove"
+	MethodRestart = "Meeko.Agent.Restart"
+	MethodSet     = "Meeko.Agent.Set"
+	MethodStart   = "Meeko.Agent.Start"
+	MethodStatus  = "Meeko.Agent.Status"
+	MethodStop    = "Meeko.Agent.Stop"
+	MethodUnset   = "Meeko.Agent.Unset"
+	MethodUpgrade = "Meeko.Agent.Upgrade"
+	MethodWatch   = "Meeko.Agent.Watch"
+)
 
-	debug("Connecting to Cider ... ")
-	client, err := rpc.NewService(func() (rpc.Transport, error) {
-		factory := zrpc.NewTransportFactory()
-		factory.MustReadConfigFromEnv("CIDER_ZMQ3_RPC_")
+const AccessTokenHeader = "X-Meeko-Token"
 
-		if fendpoint != "" {
-			factory.Endpoint = fendpoint
+func SendRequest(address, token, method string, args, reply interface{}) error {
+	// Connect to Meeko.
+	debug("Connecting to Meeko ... ")
+	service, err := rpc.NewService(func() (rpc.Transport, error) {
+		factory := transport.NewTransportFactory()
+		factory.Server = address
+		factory.Origin = "http://localhost"
+		factory.WSConfigFunc = func(wsConfig *websocket.Config) {
+			wsConfig.Header.Set(AccessTokenHeader, token)
 		}
-
 		factory.MustBeFullyConfigured()
-		return factory.NewTransport("mk#" + mustRandomString())
+		return factory.NewTransport("meeko#" + mustRandomString())
 	})
 	if err != nil {
 		debug(FAIL)
 		return err
 	}
 	debug(OK)
-	defer client.Close()
+	defer service.Close()
 
 	signalCh := make(chan os.Signal, 1)
 	signal.Notify(signalCh, os.Interrupt)
 
-	req := client.NewRemoteCall(method, args)
+	// Dispatch the request and stream the output to the console.
+	req := service.NewRemoteCall(method, args)
 	req.Stdout = os.Stdout
 	req.Stderr = os.Stderr
 
@@ -50,7 +73,7 @@ func SendRequest(method string, args interface{}, reply interface{}) (err error)
 		case <-signalCh:
 			color.Println("@{c}<<< @{r}Interrupting remote call ...")
 			req.Interrupt()
-		case <-client.Closed():
+		case <-service.Closed():
 		}
 	}()
 

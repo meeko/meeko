@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The mk AUTHORS
+// Copyright (c) 2013 The meeko AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -7,21 +7,23 @@ package main
 
 import (
 	"errors"
-	"github.com/cider/cider/apps/data"
+	"os"
+
+	"github.com/meeko/meekod/supervisor/data"
+
 	"github.com/tchap/gocli"
 	"github.com/wsxiaoys/terminal/color"
-	"os"
 )
 
 func init() {
-	mk.MustRegisterSubcommand(&gocli.Command{
+	app.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "restart ALIAS",
-		Short:     "restart a running app",
+		Short:     "restart a running agent",
 		Long: `
- Restart a running application.
+ Restart a running agent.
  
- This action can only be performed on a running application, so an error is
- returned if the application is not running.
+ This action can only be performed on a running agent, so an error is returned
+ in case the agent is not running.
         `,
 		Action: runRestart,
 	})
@@ -42,16 +44,16 @@ func runRestart(cmd *gocli.Command, args []string) {
 }
 
 func _runRestart(alias string) error {
-	// Get the Cider management token.
-	token, err := GetManagementToken()
+	// Read the config file.
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
 
 	// Send the clone request to the server.
 	var reply data.RestartReply
-	err = SendRequest("Cider.Apps.Restart", &data.RestartArgs{
-		Token: token,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodRestart, &data.RestartArgs{
+		Token: cfg.ManagementToken,
 		Alias: alias,
 	}, &reply)
 	if err != nil {
