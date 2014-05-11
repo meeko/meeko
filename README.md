@@ -1,50 +1,24 @@
-# ciderapp
+# mk #
 
-`ciderapp` is a command line utility for managing local Cider applications.
+A Meeko PaaS CLI management utility.
 
-Cider RPC is being used as the transport for the management calls, so `ciderapp`
-is actually a Cider application itself. It just connects to a Cider RPC endpoint,
-executes a single management call and exits.
+## Overview ##
 
-```text
-APPLICATION:
-  ciderapp - Cider applications management utility
+mk is a command line utility for managing Meeko agents.
 
-USAGE:
-  ciderapp [-debug] [-endpoint ENDPOINT] SUBCMD
+Under the hook, mk is implemented as a short-lived Meeko agent that uses
+the Meeko RPC service to communicate with the agent supervisor component.
 
-VERSION:
-  0.0.1
+## Installation ##
 
-OPTIONS:
-  -debug=false: print debug output
-  -endpoint="": Cider ZeroMQ 3.x RPC endpoint
-  -h=false: print help and exit
+mk must be installed from sources right now. It uses [Godep](https://github.com/tools/godep) for vendoring.
 
-DESCRIPTION:
-  ciderapp is a command line utility for managing local Cider instance,
-  or rather the Cider applications running on it.
-
-  This tool expects the local Cider instance's management token to be saved
-  in .cider_token file places in the current user's home directory.
-
-SUBCOMMANDS:
-  env            show app variable values
-  info           show app info
-  install        install a new app
-  list           list installed apps
-  remove         uninstall an app
-  restart        restart a running app
-  set            set app variable
-  start          start an app
-  status         show app status
-  stop           stop a running app
-  unset          unset app variable
-  upgrade        upgrade an existing app
-  watch          stream app logs
-  
+```
+$ cd mk
+$ godep go build
+$ ./mk -h
 ```
 
-# License
+## License ##
 
 MIT, see the `LICENSE` file.

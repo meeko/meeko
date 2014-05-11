@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -11,20 +11,20 @@ import (
 	"os"
 )
 
-var ciderapp = gocli.NewApp("ciderapp")
+var mk = gocli.NewApp("mk")
 
 func init() {
-	ciderapp.UsageLine = "ciderapp [-debug] [-endpoint ENDPOINT] SUBCMD"
-	ciderapp.Version = "0.0.1"
-	ciderapp.Short = "Cider applications management utility"
-	ciderapp.Long = `
-  ciderapp is a command line utility for managing local Cider instance,
+	mk.UsageLine = "mk [-debug] [-endpoint ENDPOINT] SUBCMD"
+	mk.Version = "0.0.1"
+	mk.Short = "Cider applications management utility"
+	mk.Long = `
+  mk is a command line utility for managing local Cider instance,
   or rather the Cider applications running on it.
 
   This tool expects the local Cider instance's management token to be saved
   in .cider_token file places in the current user's home directory.`
-	ciderapp.Flags.BoolVar(&fdebug, "debug", fdebug, "print debug output")
-	ciderapp.Flags.StringVar(&fendpoint, "endpoint", fendpoint, "Cider ZeroMQ 3.x RPC endpoint")
+	mk.Flags.BoolVar(&fdebug, "debug", fdebug, "print debug output")
+	mk.Flags.StringVar(&fendpoint, "endpoint", fendpoint, "Cider ZeroMQ 3.x RPC endpoint")
 }
 
 var (
@@ -34,5 +34,5 @@ var (
 
 func main() {
 	seelog.ReplaceLogger(seelog.Disabled)
-	ciderapp.Run(os.Args[1:])
+	mk.Run(os.Args[1:])
 }

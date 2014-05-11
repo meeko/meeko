@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -39,7 +39,7 @@ func init() {
 	}
 	subcmd.Flags.StringVar(&watchLevel, "level", watchLevel, "filter logs by log level")
 
-	ciderapp.MustRegisterSubcommand(subcmd)
+	mk.MustRegisterSubcommand(subcmd)
 }
 
 var watchLevel = "unset"

@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -28,7 +28,7 @@ func init() {
 	}
 	subcmd.Flags.BoolVar(&fstartWatch, "watch", fstartWatch, "start watching the app")
 
-	ciderapp.MustRegisterSubcommand(subcmd)
+	mk.MustRegisterSubcommand(subcmd)
 }
 
 var fstartWatch bool

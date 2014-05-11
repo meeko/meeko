@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ciderapp.MustRegisterSubcommand(&gocli.Command{
+	mk.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "install IMPORT_PATH as APP",
 		Short:     "install a new app",
 		Long: `
@@ -33,7 +33,7 @@ func init() {
 
     * git+file  - clones a Git repository from a local repository,
                   URL fragment is treated as Git ref.
-                  example: git+file:///home/tchap/src/ciderapp#develop
+                  example: git+file:///home/tchap/src/mk#develop
         `,
 		Action: runInstall,
 	})

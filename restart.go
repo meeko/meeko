@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -14,7 +14,7 @@ import (
 )
 
 func init() {
-	ciderapp.MustRegisterSubcommand(&gocli.Command{
+	mk.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "restart ALIAS",
 		Short:     "restart a running app",
 		Long: `

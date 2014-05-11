@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -16,13 +16,13 @@ import (
 )
 
 func init() {
-	ciderapp.MustRegisterSubcommand(&gocli.Command{
+	mk.MustRegisterSubcommand(&gocli.Command{
 		UsageLine: "info ALIAS",
 		Short:     "show app info",
 		Long: `
-  Show application info, which is basically the relevant ciderapp.json,
+  Show application info, which is basically the relevant mk.json,
   just formated nicely. This command, however, does not only print the static
-  data from ciderapp.json, but also the current application configuration,
+  data from mk.json, but also the current application configuration,
   such as the environmental variables.
         `,
 		Action: runInfo,

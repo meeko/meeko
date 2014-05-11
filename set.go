@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The ciderapp AUTHORS
+// Copyright (c) 2013 The mk AUTHORS
 //
 // Use of this source code is governed by The MIT License
 // that can be found in the LICENSE file.
@@ -42,7 +42,7 @@ func init() {
 	cmd.Flags.BoolVar(&fsetOurs, "ours", fsetOurs, "pick the value from ALIAS on conflict")
 	cmd.Flags.BoolVar(&fsetTheirs, "theirs", fsetTheirs, "pick the value from FROM_ALIAS on conflict")
 
-	ciderapp.MustRegisterSubcommand(cmd)
+	mk.MustRegisterSubcommand(cmd)
 }
 
 var (

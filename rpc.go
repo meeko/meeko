@@ -25,7 +25,7 @@ func SendRequest(method string, args interface{}, reply interface{}) (err error)
 		}
 
 		factory.MustBeFullyConfigured()
-		return factory.NewTransport("ciderapp#" + mustRandomString())
+		return factory.NewTransport("mk#" + mustRandomString())
 	})
 	if err != nil {
 		debug(FAIL)
