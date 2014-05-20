@@ -52,7 +52,7 @@ func _runUpgrade(alias string) error {
 	// Send the clone request to the server.
 	var reply data.UpgradeReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodUpgrade, &data.UpgradeArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 	}, &reply)
 	if err != nil {

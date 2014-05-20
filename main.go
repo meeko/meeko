@@ -15,6 +15,10 @@ import (
 var app = gocli.NewApp("meeko")
 
 func init() {
+	if value := os.Getenv("MEEKO_CONFIG"); value != "" {
+		flagConfig = value
+	}
+
 	app.UsageLine = "meeko [-debug] [-config=PATH] SUBCMD"
 	app.Version = "0.0.1"
 	app.Short = "Meeko agents management utility"
@@ -23,7 +27,11 @@ func init() {
   Check the list of subcommands to see what actions are available.
 
   meeko expects a configuration file called .meekorc to be present
-  in the user's home directory. The path can be ovewritten with -config.`
+  in the user's home directory. The path can be ovewritten with -config.
+
+ENVIRONMENT:
+  MEEKO_CONFIG - can be used instead of -config
+`
 
 	app.Flags.BoolVar(&flagDebug, "debug", flagDebug, "print debug output")
 	app.Flags.StringVar(&flagConfig, "config", flagConfig, "configuration file path")

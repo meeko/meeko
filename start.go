@@ -59,7 +59,7 @@ func _runStart(alias string) error {
 	// Send the clone request to the server.
 	var reply data.StartReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodStart, &data.StartArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 		Watch: fstartWatch,
 	}, &reply)

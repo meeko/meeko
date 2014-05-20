@@ -61,7 +61,7 @@ func _runRemove(alias string) error {
 	// Send the clone request to the server.
 	var reply data.RemoveReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodRemove, &data.RemoveArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 	}, &reply)
 	if err != nil {

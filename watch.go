@@ -74,7 +74,7 @@ func _runWatch(alias string) error {
 	// interrupted by the user.
 	var reply data.WatchReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodWatch, &data.WatchArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 		Level: uint32(level),
 	}, &reply)

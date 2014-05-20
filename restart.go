@@ -53,7 +53,7 @@ func _runRestart(alias string) error {
 	// Send the clone request to the server.
 	var reply data.RestartReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodRestart, &data.RestartArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 	}, &reply)
 	if err != nil {

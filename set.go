@@ -96,7 +96,7 @@ func _runSet(args []string) error {
 
 	// Ask for the value if requested.
 	sargs := &data.SetArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 	}
 
 	switch {

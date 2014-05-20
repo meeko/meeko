@@ -50,15 +50,15 @@ func runEnv(cmd *gocli.Command, args []string) {
 
 func _runEnv(alias string) error {
 	// Read the config file.
-	config, err := LoadConfig(flagConfig)
+	cfg, err := LoadConfig(flagConfig)
 	if err != nil {
 		return err
 	}
 
 	// Send the status request to the server.
 	var reply data.EnvReply
-	err = SendRequest(config.Address, config.AccessToken, MethodEnv, &data.EnvArgs{
-		Token: config.ManagementToken,
+	err = SendRequest(cfg.Address, cfg.AccessToken, MethodEnv, &data.EnvArgs{
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 	}, &reply)
 	if err != nil {

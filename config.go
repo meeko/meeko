@@ -19,7 +19,7 @@ const ConfigFileName = ".meekorc"
 type Config struct {
 	Address         string `yaml:"endpoint_address"`
 	AccessToken     string `yaml:"access_token"`
-	ManagementToken []byte `yaml:"management_token"`
+	ManagementToken string `yaml:"management_token"`
 }
 
 func (cfg *Config) Validate() error {
@@ -28,7 +28,7 @@ func (cfg *Config) Validate() error {
 		return errors.New("endpoint_address is not set")
 	case len(cfg.AccessToken) == 0:
 		return errors.New("access_token is not set")
-	case len(cfg.ManagementToken) == 0:
+	case len([]byte(cfg.ManagementToken)) == 0:
 		return errors.New("management_token is not set")
 	}
 	return nil

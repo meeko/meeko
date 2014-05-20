@@ -50,7 +50,7 @@ func _runUnset(variable string, alias string) error {
 	// Send the request to the server.
 	var reply data.UnsetReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodUnset, &data.UnsetArgs{
-		Token:    cfg.ManagementToken,
+		Token:    []byte(cfg.ManagementToken),
 		Alias:    alias,
 		Variable: variable,
 	}, &reply)

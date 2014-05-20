@@ -56,7 +56,7 @@ func _runStop(alias string) error {
 	// Send the clone request to the server.
 	var reply data.StopReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodStop, &data.StopArgs{
-		Token:   cfg.ManagementToken,
+		Token:   []byte(cfg.ManagementToken),
 		Alias:   alias,
 		Timeout: fstopTimeout,
 	}, &reply)

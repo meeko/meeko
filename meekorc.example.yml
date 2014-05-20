@@ -1,0 +1,3 @@
+endpoint_address: "ws://localhost:1234"
+access_token:     "secret"
+management_token: "someOtherSecret"

@@ -56,7 +56,7 @@ func _runStatus(args []string) error {
 
 	// Send the status request to the server.
 	statArgs := data.StatusArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 	}
 	if len(args) == 1 {
 		statArgs.Alias = args[0]

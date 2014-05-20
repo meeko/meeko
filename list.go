@@ -50,7 +50,7 @@ func _runList() error {
 	// Send the request to the server.
 	var reply data.ListReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodList, &data.ListArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 	}, &reply)
 	if err != nil {
 		return err

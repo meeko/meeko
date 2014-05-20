@@ -53,7 +53,7 @@ func _runInfo(alias string) error {
 	// Send the status request to the server.
 	var reply data.InfoReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodInfo, &data.InfoArgs{
-		Token: cfg.ManagementToken,
+		Token: []byte(cfg.ManagementToken),
 		Alias: alias,
 	}, &reply)
 	if err != nil {

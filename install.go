@@ -65,7 +65,7 @@ func _runInstall(url string, alias string) error {
 	// Send the install request to the server.
 	var reply data.InstallReply
 	err = SendRequest(cfg.Address, cfg.AccessToken, MethodInstall, &data.InstallArgs{
-		Token:      cfg.ManagementToken,
+		Token:      []byte(cfg.ManagementToken),
 		Alias:      alias,
 		Repository: url,
 	}, &reply)
