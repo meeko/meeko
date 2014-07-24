@@ -48,6 +48,10 @@ access_token:     Meeko RPC service WebSocket endpoint token
 management_token: Meeko management token
 ```
 
+## Discussion ##
+
+Join the [mailing list](https://groups.google.com/forum/#!forum/meeko-users) and ask about anything!
+
 ## License ##
 
 MIT, see the `LICENSE` file.
